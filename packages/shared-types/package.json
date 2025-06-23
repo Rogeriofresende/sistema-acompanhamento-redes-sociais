@@ -1,0 +1,25 @@
+{
+  "name": "@sistema-lancei-essa/shared-types",
+  "version": "1.0.0",
+  "description": "Tipos TypeScript compartilhados entre frontend e backend",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "typescript",
+    "types",
+    "shared"
+  ],
+  "author": "Sistema Lancei Essa Team",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist/**/*"
+  ]
+} 
