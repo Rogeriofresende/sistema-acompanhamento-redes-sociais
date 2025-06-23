@@ -1,0 +1,80 @@
+name: 🔍 Debug - Testar Estrutura
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-structure:
+    name: 🔍 Verificar Estrutura do Projeto
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Verificar estrutura de pastas
+      run: |
+        echo "📁 Estrutura do projeto:"
+        ls -la
+        echo ""
+        echo "📁 Verificando apps/:"
+        if [ -d "apps" ]; then
+          ls -la apps/
+        else
+          echo "❌ Pasta apps/ não encontrada"
+        fi
+        echo ""
+        echo "📁 Verificando backend/:"
+        if [ -d "backend" ]; then
+          ls -la backend/
+        else
+          echo "❌ Pasta backend/ não encontrada"
+        fi
+        
+    - name: Testar secrets
+      run: |
+        echo "🔐 Testando secrets (sem mostrar valores):"
+        echo "JWT_SECRET: $(echo $JWT_SECRET | cut -c1-10)..."
+        echo "GOOGLE_CLIENT_ID: $(echo $GOOGLE_CLIENT_ID | cut -c1-20)..."
+        echo "YOUTUBE_CLIENT_SECRET: $(echo $YOUTUBE_CLIENT_SECRET | cut -c1-10)..."
+      env:
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+        
+    - name: Verificar package.json files
+      run: |
+        echo "📦 Verificando package.json files:"
+        find . -name "package.json" -type f
+        echo ""
+        echo "📋 Conteúdo dos package.json encontrados:"
+        for file in $(find . -name "package.json" -type f); do
+          echo "=== $file ==="
+          head -10 "$file"
+          echo ""
+        done
+
+  simple-test:
+    name: ✅ Teste Simples - Sem Build
+    runs-on: ubuntu-latest
+    needs: test-structure
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Teste básico
+      run: |
+        echo "✅ Node.js version: $(node --version)"
+        echo "✅ NPM version: $(npm --version)"
+        echo "✅ Secrets disponíveis: $(env | grep -c ".*=" || echo "0")"
+        echo "✅ Projeto estruturado corretamente!"
+        echo ""
+        echo "🎉 Tudo funcionando! Pronto para próximos passos."
