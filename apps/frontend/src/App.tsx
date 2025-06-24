@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardPage } from './polymet/pages/dashboard-page';
+import DashboardPage from './features/dashboard-page';
 
 function App() {
   return (
